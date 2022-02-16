@@ -1,4 +1,3 @@
-from typing import *
 from itertools import chain
 from typing import List, Union
 
@@ -9,7 +8,9 @@ class BfItem:
     char_table: bytearray
     length: int
 
-    def __init__(self, length: int, char_table: Union[str, bytes, List[Union[str, bytes]]], encoding: str = 'utf-8'):
+    def __init__(self, length: int,
+                 char_table: Union[str, bytes, List[Union[str, bytes]]],
+                 encoding: str = 'utf-8'):
         self.length = length
         self.char_table = bytearray()
         if isinstance(char_table, str):
@@ -17,9 +18,11 @@ class BfItem:
         elif isinstance(char_table, bytes):
             self.char_table.extend(char_table)
         elif isinstance(char_table, list):
-            self.char_table.extend(chain(*map(lambda x: to_bytes(x, encoding), char_table)))
+            self.char_table.extend(
+                chain(*map(lambda x: to_bytes(x, encoding), char_table)))
         else:
-            raise TypeError(f'char_table must be str, bytes or list, not {type(char_table)}')
+            raise TypeError(f'char_table must be str, '
+                            f'bytes or list, not {type(char_table)}')
 
         # remove repeated chars
         self.char_table = bytearray(set(self.char_table))
@@ -45,11 +48,13 @@ class ConstItem:
 
 
 class Problem():
-    item_pos: List[int] # record the start position of each item
-    item_list: List[Union[BfItem, ConstItem]] # recprd every item
-    length: int # literal length of the whole string
+    item_pos: List[int]  # record the start position of each item
+    item_list: List[Union[BfItem, ConstItem]]  # recprd every item
+    length: int  # literal length of the whole string
 
-    def __init__(self, item_list: List[Union[BfItem, str, bytes]], encoding='utf-8'):
+    def __init__(self,
+                 item_list: List[Union[BfItem, str, bytes]],
+                 encoding='utf-8'):
         self.item_list = list()
         self.item_pos = list()
         self.length = 0
@@ -61,4 +66,5 @@ class Problem():
             elif isinstance(item, str) or isinstance(item, bytes):
                 self.item_list.append(ConstItem(item, encoding))
             else:
-                raise TypeError(f'item must be bruteforce_item or str or bytes, not {type(item)}')
+                raise TypeError(f'item must be bruteforce_item'
+                                f' or str or bytes, not {type(item)}')
