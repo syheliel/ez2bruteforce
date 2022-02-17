@@ -6,19 +6,22 @@ from .problem import Problem, BfItem, ConstItem
 from tqdm import tqdm
 
 
-def generic_solver(problem: Problem, cipher: bytes, hash_func: Callable[[bytearray], bytes]) -> Optional[bytes]:
+def generic_solver(problem: Problem, cipher: bytes,
+                   hash_func: Callable[[bytearray], bytes]) -> Optional[bytes]:
     assert isinstance(cipher, bytes)
     plaintext = bytearray()
     pos_index: List[int] = []
     char_table_list = []
     for item in problem.item_list:
-        item_len = len(item)  # all item class implement __len__ to return length in the plaintext
+        # all item class implement __len__ to return length in the plaintext
+        item_len = len(item)
         if isinstance(item, BfItem):
             current_index = len(plaintext)
             pos_index.extend(range(current_index, current_index + item_len))
             plaintext.extend(b'\x00' * item_len)  # append useless bytes
             char_table_list.extend([item.char_table] * item_len)
-            # append item_len(as number)'s char_table, each position should be view as independent
+            # append item_len(as number)'s char_table, each position should be
+            # view as independent
 
         elif isinstance(item, ConstItem):
             plaintext.extend(item.literal_string)
@@ -42,14 +45,26 @@ def generic_solver(problem: Problem, cipher: bytes, hash_func: Callable[[bytearr
 def sha1_solver(problem: Problem, cipher: bytes) -> Optional[bytes]:
     return generic_solver(problem, cipher, lambda x: hashlib.sha1(x).digest())
 
+
+def sha224_solver(problem: Problem, cipher: bytes) -> Optional[bytes]:
+    return generic_solver(
+        problem, cipher, lambda x: hashlib.sha224(x).digest())
+
+
 def sha256_solver(problem: Problem, cipher: bytes) -> Optional[bytes]:
-    return generic_solver(problem, cipher, lambda x: hashlib.sha256(x).digest())
+    return generic_solver(
+        problem, cipher, lambda x: hashlib.sha256(x).digest())
+
 
 def sha384_solver(problem: Problem, cipher: bytes) -> Optional[bytes]:
-    return generic_solver(problem, cipher, lambda x: hashlib.sha384(x).digest())
+    return generic_solver(
+        problem, cipher, lambda x: hashlib.sha384(x).digest())
+
 
 def sha512_solver(problem: Problem, cipher: bytes) -> Optional[bytes]:
-    return generic_solver(problem, cipher, lambda x: hashlib.sha512(x).digest())
+    return generic_solver(
+        problem, cipher, lambda x: hashlib.sha512(x).digest())
+
 
 def md5_solver(problem: Problem, cipher: bytes) -> Optional[bytes]:
     return generic_solver(problem, cipher, lambda x: hashlib.md5(x).digest())
