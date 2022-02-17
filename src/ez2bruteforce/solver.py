@@ -41,3 +41,15 @@ def generic_solver(problem: Problem, cipher: bytes, hash_func: Callable[[bytearr
 
 def sha1_solver(problem: Problem, cipher: bytes) -> Optional[bytes]:
     return generic_solver(problem, cipher, lambda x: hashlib.sha1(x).digest())
+
+def sha256_solver(problem: Problem, cipher: bytes) -> Optional[bytes]:
+    return generic_solver(problem, cipher, lambda x: hashlib.sha256(x).digest())
+
+def sha384_solver(problem: Problem, cipher: bytes) -> Optional[bytes]:
+    return generic_solver(problem, cipher, lambda x: hashlib.sha384(x).digest())
+
+def sha512_solver(problem: Problem, cipher: bytes) -> Optional[bytes]:
+    return generic_solver(problem, cipher, lambda x: hashlib.sha512(x).digest())
+
+def md5_solver(problem: Problem, cipher: bytes) -> Optional[bytes]:
+    return generic_solver(problem, cipher, lambda x: hashlib.md5(x).digest())
